@@ -1,73 +1,122 @@
 import { useState } from 'react';
 import './Calculator.css';
 
-const Calculator = (props) => {
-    const [total, setTotal] = useState(0);
+//Display correct error message.
+//Error when calculation based on previous calculated number
 
-    const clearHandler = () => {
-        // User Story #7: At any time, pressing the clear button clears the input and output values, and returns the calculator to its initialized state; 0 should be shown in the element with the id of display.
-        setTotal(0);
+const Calculator = (props) => {
+    const [display, setDisplay] = useState('0');
+    // display formula of the recent calculation
+    const [formula, setFormula] = useState('');
+    const [calculate, setCalculate] = useState(false);
+
+    const displayHandler = (num) => {
+        setDisplay((prevState) => {
+            // console.log(num, +num, isNaN(+num));
+            const lastNum = prevState[prevState.length - 1];
+            console.log(lastNum);
+            if (prevState === '0') {
+                if (isNaN(+num)) {
+                    return prevState;
+                }
+                return num;
+            }
+
+            if (isNaN(+lastNum) & isNaN(+num)) {
+                return prevState.slice(0, prevState.length - 1) + num;
+            }
+            return prevState + num;
+        });
     };
 
+    const clearHandler = () => {
+        setDisplay('0');
+        setFormula('');
+        setCalculate(false);
+        // setTotal(0);
+    };
+
+    const calculateHandler = () => {
+        setDisplay((prevState) => {
+            try {
+                // const lastNum = prevState[prevState.length - 1];
+                const total = eval(prevState);
+                if (!total) {
+                    throw new Error('Not a valid entry');
+                } else {
+                    setCalculate(true);
+                    setFormula(`${display}`);
+                    return total;
+                }
+            } catch (error) {
+                setDisplay(`ERROR: ${error.message}`);
+            }
+        });
+    };
     return (
         <div className="container">
             <div className="grid">
                 <div id="display" className="display">
-                    {total}
+                    <div className="total">{display}</div>
+                    {/* <br /> */}
+                    <div className="formula">{calculate ? formula : ''} </div>
                 </div>
                 <button id="clear" value="ac" className="button ac" onClick={clearHandler}>
                     AC
                 </button>
-                <button id="divide" value="/" className="button divide operator">
+                {/* Add back clear button */}
+                <button id="divide" value="/" className="button divide operator" onClick={() => displayHandler('/')}>
                     /
                 </button>
-                <button id="multiply" value="x" className="button multiply operator">
+                <button id="multiply" value="x" className="button multiply operator" onClick={() => displayHandler('*')}>
                     x
                 </button>
-                <button id="seven" value="7" className="button seven">
+                <button id="seven" value="7" className="button seven" onClick={() => displayHandler('7')}>
                     7
                 </button>
-                <button id="eight" value="8" className="button eight">
+                <button id="eight" value="8" className="button eight" onClick={() => displayHandler('8')}>
                     8
                 </button>
-                <button id="nine" value="9" className="button nine">
+                <button id="nine" value="9" className="button nine" onClick={() => displayHandler('9')}>
                     9
                 </button>
 
-                <button id="subtract" value="-" className="button subtract operator">
+                <button id="subtract" value="-" className="button subtract operator" onClick={() => displayHandler('-')}>
                     -
                 </button>
-                <button id="four" value="4" className="button four">
+                <button id="four" value="4" className="button four" onClick={() => displayHandler('4')}>
                     4
                 </button>
-                <button id="five" value="5" className="button five">
+                <button id="five" value="5" className="button five" onClick={() => displayHandler('5')}>
                     5
                 </button>
-                <button id="six" value="6" className="button six">
+                <button id="six" value="6" className="button six" onClick={() => displayHandler('6')}>
                     6
                 </button>
-                <button id="add" value="+" className="button add operator">
+                <button id="add" value="+" className="button add operator" onClick={() => displayHandler('+')}>
                     +
                 </button>
-                <button id="one" value="1" className="button one">
+                <button id="one" value="1" className="button one" onClick={() => displayHandler('1')}>
                     1
                 </button>
-                <button id="two" value="2" className="button two">
+                <button id="two" value="2" className="button two" onClick={() => displayHandler('2')}>
                     2
                 </button>
-                <button id="three" value="3" className="button three">
+                <button id="three" value="3" className="button three" onClick={() => displayHandler('3')}>
                     3
                 </button>
+
+                {/* Add negative button for negative number. It should toggle back to positive if clicked twice
                 <button id="negative" value="negative" className="button operator negative">
                     +/-
-                </button>
-                <button id="zero" value="0" className="button zero">
+                </button> */}
+                <button id="zero" value="0" className="button zero" onClick={() => displayHandler('0')}>
                     0
                 </button>
-                <button id="decimal" value="." className="button decimal">
+                <button id="decimal" value="." className="button decimal" onClick={() => displayHandler('.')}>
                     .
                 </button>
-                <button id="equals" value="=" className="button equals">
+                <button id="equals" value="=" className="button equals" onClick={calculateHandler}>
                     =
                 </button>
             </div>

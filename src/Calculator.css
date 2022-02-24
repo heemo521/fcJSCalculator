@@ -10,14 +10,14 @@
     display: grid;
     grid-template-columns: repeat(4, 25%);
     grid-template-rows: repeat(6, 1fr);
-    grid-column-gap: 2px;
+    /* grid-column-gap: 2px; */
     grid-template-areas:
         'dis dis dis dis'
         'ac ac divide multiply'
         'seven eight nine subtract'
         'four five six plus'
         'one two three equals'
-        'negative zero decimal equals';
+        'zero zero decimal equals';
 }
 
 .button {
@@ -31,10 +31,15 @@
     cursor: pointer;
     font-size: 20px;
 }
-/* 
+
+.button:hover {
+    border: 1px solid white;
+    color: lightgrey;
+}
+
 .zero {
     grid-area: zero;
-} */
+}
 
 .equals {
     grid-area: equals;
@@ -49,10 +54,20 @@
 .display {
     grid-area: dis;
     background-color: black;
-    color: orange;
+
     text-align: right;
+    padding: 10px;
     /* border: 1px solid black; */
-    font-size: 20px;
+}
+
+.total {
+    color: orange;
+    font-size: 30px;
+}
+
+.formula {
+    color: white;
+    font-size: 15px;
 }
 
 .operator {
